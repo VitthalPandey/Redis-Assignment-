@@ -57,6 +57,7 @@ class Redis_Client:
         print(f"Scores loaded. Loaded scores for {count} users.")
 
     def query1(self, usr_id):
+        print("#####################")
         print("$$$$ Answer Query 1 $$$$ ")
         try:
             user_data= self.redis.hgetall(f"user:{usr_id}")
@@ -71,6 +72,7 @@ class Redis_Client:
         return user_data
 
     def query2(self, usr_id):
+        print("#####################")
         print("$$$$ Answer Query 2 $$$$ ")
         try: 
             user_data = self.redis.hgetall(f"user:{usr_id}")
@@ -83,14 +85,13 @@ class Redis_Client:
                 print(f"Coordinated of user {usr_id}:")
                 print(f"Logitude: {longitude}")
                 print(f"Latitude: {latitude}")
-            else:
-                print(f"Location data notfound for user {usr_id}")
         except Exception as e:
             print ("Error in query 2: ",e)
         return longitude, latitude
 
     def query3(self):
-        print("$$$$Answer Query 3 $$$$ ")
+        print("#####################")
+        print("$$$$ Answer Query 3 $$$$ ")
         cursor = 1280
         usrids, lastnames = [], []
         try:
@@ -102,7 +103,7 @@ class Redis_Client:
                         usrids.append(key)
                         last_name=self.redis.hget(key, "last_name")
                         lastnames.append(last_name)
-                        print(f"{key} - {last_name}")
+                        print(f"{key} : {last_name}")
                 if cursor == 0:
                     break
         except Exception as e:
@@ -111,6 +112,7 @@ class Redis_Client:
         return usrids, lastnames
 
     def query4(self):
+        print("#####################")
         print("$$$$Answer Query 4$$$$ ")
         result = []
         for key in self.redis.scan_iter("user:*"):
@@ -126,7 +128,7 @@ class Redis_Client:
                     and 40 <= latitude <= 46
                 ):
                     result.append(user)
-                    print(f"{key}: {user.get('first_name', '')} ({country}) - gender: {gender}, latitude: {latitude}")
+                    print(f"{user.get('first_name', '')} ({country}) , latitude: {latitude}")
             except:
                 continue
         return result
@@ -134,13 +136,14 @@ class Redis_Client:
 
     def query5(self):
         results=[]
+        print("#####################")
         print("$$$$ Answer Query 5 $$$$ ")
         top_users = self.redis.zrevrange("leaderboard:2", 0, 9)
         for user_id in top_users:
             email_id=self.redis.hget(user_id, "email") 
             if email_id:
                 results.append(email_id)
-                print(f"{user_id} -> {email_id}")
+                print(f"{email_id}")
             else:
                 print(f"No email found for {user_id}")
 
